@@ -1,0 +1,23 @@
+.venv/
+__pycache__/
+*.pyc
+
+# Never commit imagery, masks, municipal layers, or credentials.
+*.jpg
+*.jpeg
+*.png
+*.npz
+*.gpkg
+seg_v2/
+seg_sf/
+audit_tool.html
+data/external/
+.env
+*token*
+
+# Generated outputs
+figures/
+tables/
+out/
+05_manuscript_R1/
+SUBMISSION_R1_PACKAGE/

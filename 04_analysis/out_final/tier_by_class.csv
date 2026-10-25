@@ -1,0 +1,6 @@
+class,Impassable (<0.9 m),Restricted (0.9-1.5 m),Accessible (>=1.5 m)
+Boulevard,0.0,9.3,90.7
+Collector avenue,29.3,9.1,61.6
+Narrow local street,46.3,22.4,31.3
+Shared lane,9.1,22.7,68.2
+Wide local street,15.8,9.4,74.9

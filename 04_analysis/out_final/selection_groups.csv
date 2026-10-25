@@ -1,0 +1,6 @@
+status,n
+analysed,531
+excluded: coverage,3
+excluded: no corridor width,156
+excluded: no qualifying panorama,139
+excluded: not snapped,47

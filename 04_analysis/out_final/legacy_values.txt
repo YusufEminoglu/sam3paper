@@ -1,0 +1,4 @@
+nodes with R1 estimate: 26 of 63
+Spearman(R0 ECW, R1 ECW_best) = 0.74
+R0 share ECW=0: 31.7% (n=63); R1 share impassable among evaluated: 15.4% (n=26)
+R0 clutter cap reached (either side 4.00 m): 76%

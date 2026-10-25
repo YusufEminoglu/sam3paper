@@ -1,0 +1,145 @@
+﻿key,inst,cls,score,judgement
+scs_6729_W,1,person,0.93,TP
+scs_6729_W,2,person,0.93,TP
+scs_6729_W,3,person,0.743,FP
+scs_6729_W,4,car,0.977,TP
+scs_6729_W,5,car,0.786,TP
+scs_6729_W,6,car,0.953,TP
+scs_6729_W,7,car,0.643,?
+scs_6729_W,8,chair,0.723,FP
+scs_6729_W,9,chair,0.92,TP
+scs_6729_W,10,chair,0.788,TP
+scs_6729_W,11,chair,0.716,TP
+scs_6729_W,12,table,0.675,TP
+scs_6729_W,13,potted plant,0.612,TP
+scs_6729_W,14,potted plant,0.849,TP
+scs_6729_W,15,potted plant,0.654,TP
+scs_6729_W,16,utility pole,0.733,TP
+scs_6729_W,17,street light,0.85,TP
+scs_1935_S,1,car,0.677,TP
+scs_1935_S,2,car,0.908,TP
+scs_1935_S,3,car,0.664,TP
+scs_1935_S,4,car,0.645,TP
+scs_1935_S,5,truck,0.601,TP
+scs_1935_S,6,truck,0.954,TP
+scs_1935_S,7,truck,0.965,TP
+scs_5624_E,1,car,0.817,TP
+scs_5624_E,2,car,0.967,TP
+scs_5624_E,3,car,0.852,TP
+scs_5624_E,4,car,0.77,TP
+scs_5624_E,5,car,0.831,TP
+scs_5624_E,6,car,0.96,TP
+scs_5624_E,7,car,0.743,TP
+scs_5624_E,8,trash can,0.782,TP
+scs_5624_E,9,dumpster,0.698,TP
+scs_5624_E,10,utility box,0.782,TP
+scs_5624_E,11,utility box,0.686,TP
+scs_2290_W,1,motorcycle,0.823,TP
+scs_2290_W,2,potted plant,0.775,TP
+scs_2290_W,3,potted plant,0.607,TP
+scs_2290_W,4,utility pole,0.759,TP
+scs_2290_W,5,utility pole,0.786,TP
+scs_2290_W,6,street light,0.837,TP
+scs_3282_E,1,person,0.764,FP
+scs_3282_E,2,person,0.667,TP
+scs_3282_E,3,person,0.645,TP
+scs_3282_E,4,chair,0.807,TP
+scs_3282_E,5,chair,0.824,TP
+scs_3282_E,6,chair,0.647,TP
+scs_3282_E,7,chair,0.713,TP
+scs_3282_E,8,chair,0.79,TP
+scs_3282_E,9,chair,0.845,TP
+scs_3282_E,10,table,0.863,TP
+scs_3282_E,11,table,0.762,TP
+scs_3282_E,12,dumpster,0.809,FP
+scs_3282_E,13,street light,0.918,TP
+scs_3282_E,14,street light,0.797,TP
+scs_3282_E,15,utility box,0.827,TP
+scs_1990_N,1,car,0.965,TP
+scs_1990_N,2,trash can,0.954,TP
+scs_1990_N,3,dumpster,0.958,TP
+scs_1990_N,4,utility pole,0.921,TP
+scs_1990_N,5,utility box,0.865,FP
+scs_5922_E,1,chair,0.648,TP
+scs_5922_E,2,chair,0.716,TP
+scs_5922_E,3,chair,0.7,TP
+scs_5922_E,4,potted plant,0.64,TP
+scs_5922_E,5,potted plant,0.809,TP
+scs_5922_E,6,trash can,0.701,TP
+scs_5922_E,7,utility pole,0.652,TP
+scs_5922_E,8,street light,0.645,TP
+scs_5621_N,1,person,0.739,TP
+scs_5621_N,2,car,0.957,TP
+scs_5621_N,3,car,0.975,TP
+scs_5621_N,4,car,0.877,TP
+scs_5621_N,5,car,0.785,TP
+scs_5621_N,6,car,0.971,TP
+scs_5621_N,7,car,0.66,TP
+scs_5621_N,8,car,0.626,TP
+scs_5621_N,9,car,0.92,TP
+scs_5621_N,10,motorcycle,0.729,TP
+scs_5621_N,11,chair,0.697,TP
+scs_5621_N,12,chair,0.77,TP
+tg_Ax7_120_L,1,person,0.917,TP
+tg_Ax7_120_L,2,person,0.893,TP
+tg_Ax7_120_L,3,person,0.953,TP
+tg_Ax7_120_L,4,person,0.905,TP
+tg_Ax7_120_L,5,car,0.715,TP
+tg_Ax7_120_L,6,potted plant,0.906,TP
+tg_Ax7_120_L,7,potted plant,0.936,TP
+tg_Ax7_120_L,8,trash can,0.726,TP
+tg_Ax7_120_L,9,trash can,0.732,TP
+tg_Ax7_120_L,10,trash can,0.883,FP
+tg_Ax7_120_L,11,dumpster,0.62,TP
+tg_Ax7_120_L,12,dumpster,0.76,TP
+tg_Ax7_120_L,13,street light,0.951,TP
+tg_Ax3_20_R,1,motorcycle,0.897,TP
+tg_Ax3_20_R,2,motorcycle,0.905,TP
+tg_Ax3_20_R,3,utility pole,0.88,TP
+tg_Ax3_20_R,4,street light,0.898,TP
+tg_Ax3_20_R,5,utility box,0.826,TP
+tg_Ax2_80_L,1,person,0.761,TP
+tg_Ax2_80_L,2,car,0.854,TP
+tg_Ax2_80_L,3,car,0.704,TP
+tg_Ax2_80_L,4,car,0.638,FP
+tg_Ax2_80_L,5,car,0.897,TP
+tg_Ax2_80_L,6,car,0.883,TP
+tg_Ax2_80_L,7,car,0.815,TP
+tg_Ax2_80_L,8,trash can,0.951,FP
+tg_Ax2_80_L,9,dumpster,0.636,TP
+tg_Ax2_80_L,10,dumpster,0.606,TP
+tg_Ax2_80_L,11,dumpster,0.933,FP
+tg_Ax2_80_L,12,utility box,0.973,TP
+tg_Ax4_20_R,1,truck,0.962,TP
+tg_Ax4_20_R,2,utility pole,0.848,TP
+tg_Ax4_20_R,3,utility pole,0.856,TP
+tg_Ax4_20_R,4,street light,0.851,TP
+tg_Ax4_120_R,1,person,0.963,TP
+tg_Ax4_120_R,2,person,0.814,TP
+tg_Ax4_120_R,3,person,0.846,TP
+tg_Ax4_120_R,4,person,0.666,TP
+tg_Ax4_120_R,5,trash can,0.767,FP
+tg_Ax4_120_R,6,trash can,0.793,FP
+tg_Ax4_120_R,7,utility box,0.643,TP
+tg_Ax4_120_R,8,utility box,0.851,TP
+tg_Ax4_120_R,9,utility box,0.924,TP
+tg_Ax4_160_R,1,motorcycle,0.817,TP
+tg_Ax4_160_R,2,motorcycle,0.871,TP
+tg_Ax4_160_R,3,utility box,0.644,TP
+tg_Ax2_40_L,1,person,0.864,FP
+tg_Ax2_40_L,2,person,0.825,TP
+tg_Ax2_40_L,3,person,0.924,FP
+tg_Ax2_40_L,4,person,0.826,TP
+tg_Ax2_40_L,5,car,0.965,TP
+tg_Ax2_40_L,6,car,0.809,FP
+tg_Ax2_40_L,7,car,0.733,TP
+tg_Ax2_40_L,8,car,0.776,TP
+tg_Ax2_40_L,9,car,0.955,TP
+tg_Ax2_40_L,10,car,0.664,TP
+tg_Ax2_40_L,11,car,0.911,TP
+tg_Ax2_40_L,12,car,0.892,TP
+tg_Ax2_40_L,13,chair,0.863,TP
+tg_Ax2_40_L,14,chair,0.625,TP
+tg_Ax2_40_L,15,chair,0.794,TP
+tg_Ax2_40_L,16,chair,0.615,TP
+tg_Ax2_40_L,17,table,0.864,TP

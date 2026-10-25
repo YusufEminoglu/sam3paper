@@ -1,0 +1,8 @@
+axis,morph_r0,w_cad,road,w_corr_gis,ecw_r0_mean,n_r1,ecw_r1_mean,share_imp_r0,share_imp_r1
+Ax1,Central_Parking,21.0,DR. MUSTAFA ENVER BEY,27.25,13.67,7,4.91,0.0,0.0
+Ax2,Central_Parking,8.0,NEVVAR SALİH İŞGÖREN,10.94,1.09,4,1.55,33.33,25.0
+Ax3,Standard_Canyon,8.0,1440,8.65,0.56,0,,77.78,
+Ax4,Standard_Canyon,6.0,CUMHURİYET,7.86,2.87,6,3.7,0.0,16.67
+Ax5,Shared_Space,6.0,YÜZBAŞI ŞERAFETTİN BEY,8.09,0.4,1,0.45,77.78,100.0
+Ax6,Pedestrian_Commercial,5.0,1469,6.04,1.21,0,,33.33,
+Ax7,Shared_Space,10.0,KIBRIS ŞEHİTLERİ,18.11,3.9,8,2.2,0.0,12.5

@@ -1,0 +1,30 @@
+cff-version: 1.2.0
+message: "If you use this code or the derived data, please cite the article and this repository."
+title: "Phantom Capacity in Urban Pedestrian Networks: code and derived data"
+type: software
+authors:
+  - family-names: Eminoğlu
+    given-names: Yusuf
+    orcid: "https://orcid.org/0009-0005-6000-2934"
+    affiliation: "Department of City and Regional Planning, Dokuz Eylül University, İzmir, Türkiye"
+    email: yusuf.eminoglu@deu.edu.tr
+  - family-names: Erdin
+    given-names: Hilmi Evren
+    orcid: "https://orcid.org/0000-0002-3350-8930"
+    affiliation: "Department of City and Regional Planning, Dokuz Eylül University, İzmir, Türkiye"
+  - family-names: Şanlı
+    given-names: Nurseli
+    orcid: "https://orcid.org/0000-0003-4336-590X"
+    affiliation: "Department of City and Regional Planning, Istanbul Technical University, Istanbul, Türkiye"
+repository-code: "https://github.com/YusufEminoglu/sam3paper"
+url: "https://github.com/YusufEminoglu/sam3paper"
+license: MIT
+version: "1.0.0"
+date-released: "2026-10-26"
+keywords:
+  - walkability
+  - phantom capacity
+  - street view imagery
+  - Segment Anything Model
+  - pedestrian network
+  - urban morphology

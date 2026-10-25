@@ -1,0 +1,6 @@
+class,n,ecw_mean,ecw_med,pc,veh,furn,infra,person
+Boulevard,43,6.99,5.5,0.13,25.65,1.23,2.08,1.06
+Collector avenue,99,3.32,2.6,0.36,8.06,5.1,2.68,2.09
+Narrow local street,134,1.18,1.0,0.47,3.06,0.99,0.91,0.32
+Shared lane,110,2.21,2.08,0.35,5.06,0.8,1.41,0.34
+Wide local street,171,5.99,4.5,0.25,8.23,0.51,1.83,0.23
