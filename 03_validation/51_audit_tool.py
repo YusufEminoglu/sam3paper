@@ -10,6 +10,9 @@ import sys, io, json, base64, numpy as np, pandas as pd
 from pathlib import Path
 from PIL import Image, ImageDraw
 
+sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "02_pipeline_v2"))
+from imgpath import image_path
+
 seg_dir, manifest, audit = Path(sys.argv[1]), sys.argv[2], Path(sys.argv[3])
 SHOW = ["person", "car", "truck", "motorcycle", "chair", "table", "potted plant", "trash can", "dumpster", "utility pole",
         "street light", "utility box", "electrical cabinet"]
@@ -34,7 +37,7 @@ def erode(m):
 data = []
 for key in keys:
     j = json.load(open(seg_dir / (key + ".json"), encoding="utf-8")); z = np.load(seg_dir / (key + ".npz")); shape = tuple(z["shape"])
-    img = Image.open(man.loc[key, "path"]).convert("RGB")
+    img = Image.open(image_path(man.loc[key])).convert("RGB")
     base = np.array(img)
     insts, idx = [], 0
     for i, d in enumerate(j["dets"]):

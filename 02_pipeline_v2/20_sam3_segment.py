@@ -11,6 +11,7 @@ import os, sys, json, time, argparse
 import numpy as np, pandas as pd, torch
 from PIL import Image
 from transformers import Sam3Processor, Sam3Model
+from imgpath import image_path
 
 PROMPTS = ["person", "car", "truck", "motorcycle", "chair", "table", "potted plant", "trash can", "dumpster",
            "utility pole", "street light", "utility box", "electrical cabinet", "sidewalk", "road", "building"]
@@ -35,7 +36,7 @@ for i, r in man.iterrows():
     outj = os.path.join(a.out_dir, r.key + ".json")
     if os.path.exists(outj):
         continue
-    img = Image.open(r.path).convert("RGB")
+    img = Image.open(image_path(r)).convert("RGB")
     dets, masks = [], []
     with torch.no_grad():
         pv = proc(images=img, text=PROMPTS[0], return_tensors="pt").to(dev)

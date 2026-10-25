@@ -8,6 +8,7 @@ import sys, os, json, numpy as np, pandas as pd, torch, cv2
 from PIL import Image
 from pathlib import Path
 from transformers import SegformerForSemanticSegmentation, SegformerImageProcessor
+from imgpath import image_path
 
 MODEL = "nvidia/segformer-b5-finetuned-ade-640-640"
 MIN_PX = 250
@@ -29,7 +30,7 @@ print({k: [id2[i] for i in v] for k, v in cls_ids.items()})
 for r in man.itertuples():
     if (out / (r.key + ".json")).exists():
         continue
-    img = Image.open(r.path).convert("RGB")
+    img = Image.open(image_path(r)).convert("RGB")
     inp = proc(images=img, return_tensors="pt")
     with torch.no_grad():
         lg = model(**inp).logits

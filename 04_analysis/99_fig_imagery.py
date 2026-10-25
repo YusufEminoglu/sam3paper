@@ -2,11 +2,13 @@
 Differences from the first version: the frames are the re-retrieved panoramas whose capture month is fixed and known (provenance table), the header gives the GIS corridor width and the capture month
 instead of the four typologies, and the masks are the stored SAM 3 output (score >= 0.6). Node choice: the node used in the first version if it has a panorama from March-November 2024-2025, otherwise the
 nearest such node on the same axis."""
-import json
+import sys, json
 from PIL import Image
 from sigfig_common import *
 
 PIPE = REV / "02_pipeline_v2"
+sys.path.insert(0, str(PIPE))
+from imgpath import image_path
 man = pd.read_csv(PIPE / "manifest_run.csv").set_index("key"); prov = pd.read_csv(PIPE / "tg_images_R1_provenance.csv").set_index("node")
 cor = pd.read_csv(PIPE / "corridor_nodes.csv"); cor = cor[cor.src == "TG"].set_index("id")
 AXC = {"Ax1": "#c77d7d", "Ax2": "#a16363", "Ax3": "#7d94b5", "Ax4": "#617491", "Ax5": "#89b1c2", "Ax6": "#cfb57e", "Ax7": "#91ad91"}
@@ -26,7 +28,7 @@ def pick(ax):
 
 def overlay(key):
     j = json.load(open(PIPE / "seg_v2" / f"{key}.json", encoding="utf-8")); z = np.load(PIPE / "seg_v2" / f"{key}.npz"); sh = tuple(z["shape"])
-    img = np.array(Image.open(man.loc[key, "path"]).convert("RGB")).astype(float); out = img.copy()
+    img = np.array(Image.open(image_path(man.loc[key])).convert("RGB")).astype(float); out = img.copy()
     for i, d in enumerate(j["dets"]):
         g = GRP.get(d["prompt"])
         if g is None or d["score"] < 0.6: continue

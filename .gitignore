@@ -10,6 +10,8 @@ __pycache__/
 *.gpkg
 seg_v2/
 seg_sf/
+# the one derived mask that a figure script needs (1 KB, never part of the seg archive)
+!00_inputs/tree_mask_Ax2_40_L.npz
 audit_tool.html
 data/external/
 .env

@@ -1,9 +1,11 @@
 """Instance-level audit of SAM 3: (a) precision by obstacle class and group with Wilson 95% intervals, (b) a gallery of the false positives found by the rater
 (mask outlined on the frame; class, score, and the frame's identifier). Instances are numbered as in the audit tool (score >= 0.6, listed classes, file order)."""
-import json
+import sys, json
 from PIL import Image
 from sigfig_common import *
 
+sys.path.insert(0, str(REV / "02_pipeline_v2"))
+from imgpath import image_path
 AUD = REV / "03_validation/audit"; SEG = REV / "02_pipeline_v2/seg_v2"
 au = pd.read_csv(REV / "03_validation/out_final/audit_summary.csv").set_index("group")
 ins = pd.read_csv(AUD / "audit_instances_filled.csv", encoding="utf-8-sig"); man = pd.read_csv(REV / "02_pipeline_v2/manifest_run.csv").set_index("key")
@@ -37,7 +39,7 @@ for k, r in enumerate(pick.itertuples()):
         if d["score"] < 0.6 or d["prompt"] not in SHOW: continue
         idx += 1
         if idx == r.inst: mask = np.unpackbits(z["masks"][i])[:sh[0] * sh[1]].reshape(sh).astype(bool)
-    im = np.array(Image.open(man.loc[r.key, "path"]).convert("RGB")).astype(float); out = im.copy()
+    im = np.array(Image.open(image_path(man.loc[r.key])).convert("RGB")).astype(float); out = im.copy()
     er = mask.copy(); er[1:] &= mask[:-1]; er[:-1] &= mask[1:]; er[:, 1:] &= mask[:, :-1]; er[:, :-1] &= mask[:, 1:]
     out[mask] = 0.55 * out[mask] + 0.45 * np.array([255, 60, 60]); out[mask & ~er] = (255, 235, 0)
     ys, xs = np.where(mask); m = 55; y0, y1, x0, x1 = max(0, ys.min() - m), min(sh[0], ys.max() + m), max(0, xs.min() - m), min(sh[1], xs.max() + m)

@@ -11,7 +11,7 @@ for node, g in cov.groupby("node"):
     best = max(itertools.combinations(avail, min(2, len(avail))),
                key=lambda pr: sum(min(1.0, piv.loc[s, list(pr)].sum()) for s in piv.index))
     for d in best:
-        rows.append(dict(key=f"scs_{int(node)}_{d}", path=os.path.join(SCS_IMG, f"node{int(node)}_{d}.jpg"), node=f"scs_{int(node)}",
+        rows.append(dict(key=f"scs_{int(node)}_{d}", path=f"scs/node{int(node)}_{d}.jpg", node=f"scs_{int(node)}",
                          side="", heading=HEAD[d], pitch=-10.0, src="SCS"))
 m = pd.DataFrame(rows)
 tg = pd.read_csv("manifest_TG.csv")

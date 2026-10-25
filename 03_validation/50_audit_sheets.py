@@ -9,6 +9,9 @@ import json, sys, numpy as np, pandas as pd
 from pathlib import Path
 from PIL import Image, ImageDraw, ImageFont
 
+sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "02_pipeline_v2"))
+from imgpath import image_path
+
 seg_dir, manifest, out_dir, n = Path(sys.argv[1]), sys.argv[2], Path(sys.argv[3]), int(sys.argv[4])
 seed = int(sys.argv[5]) if len(sys.argv) > 5 else 42
 out_dir.mkdir(parents=True, exist_ok=True)
@@ -41,7 +44,7 @@ for key in pick:
     r = man[man.key == key].iloc[0]
     j = json.load(open(seg_dir / (key + ".json")))
     npz = np.load(seg_dir / (key + ".npz")); shape = tuple(npz["shape"])
-    img = Image.open(r.path).convert("RGB")
+    img = Image.open(image_path(r)).convert("RGB")
     ov = np.array(img).copy()
     idx = 0
     labels = []

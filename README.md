@@ -23,6 +23,7 @@ The analysed sample has 557 nodes in 251 streets in Konak, İzmir.
 00_inputs/
   konak_gsv_candidates.csv      # 876 candidate nodes of the Konak sample (node_id, lat, lon, hex_id)
   legacy_gsv_nodes.csv          # the 63 nodes of the first-version pilot, with capture year
+  tree_mask_Ax2_40_L.npz        # the tree mask drawn on in the worked example of Figure 3
 02_pipeline_v2/                 # corridor geometry, view selection, SAM 3 segmentation, ECW, calibration
   *.py                          # pipeline scripts (run from this folder)
   *.csv                         # derived outputs: corridor_nodes, manifest_run, view_coverage, seg scores, calib,
@@ -40,11 +41,11 @@ The derived tables are sufficient to rerun `04_analysis/` and reproduce the repo
 
 ## What is not in this repository
 
-**Street View frames.** Google's terms do not permit redistribution, so no frame is stored here, and the audit sheets are provided as verdicts rather than images. Every frame used in the study is identified in `02_pipeline_v2/manifest_run.csv` by node, side, heading, pitch, panorama identifier and capture date. Anyone with a Street View API key can request the same frames again. The legacy pilot was re-retrieved for this revision with panoramas fixed by identifier and screened by capture date; the provenance is in `tg_images_R1_provenance.csv` and `tg_pano_dates.csv`.
+**Street View frames.** Google's terms do not permit redistribution, so no frame is stored here, and the audit sheets are provided as verdicts rather than images. `02_pipeline_v2/manifest_run.csv` lists all 1,174 frames of the study with the image key, node, side, camera heading and pitch, source label and a relative path (`scs/node1398_E.jpg`, `tg/Axis2_Dist40_Left.jpg`). The two sources are documented differently. For the 100 legacy pilot frames (50 nodes) the exact panorama is fixed by identifier and its capture date is recorded, in `tg_images_R1_provenance.csv` and `tg_pano_dates.csv`. For the 1,074 Konak frames (537 nodes) the frames were retrieved by coordinate rather than by panorama identifier, so the node coordinates in `corridor_nodes.csv` together with the recorded heading and pitch identify the view; anyone with a Street View API key can request the same view again, though not necessarily the same capture.
 
 **Municipal GIS database.** The road and building layers come from the Konak smart-city database and are not redistributed. Derived per-node corridor geometry is provided in `corridor_nodes.csv`. To rebuild it, set `PC_MUNICIPAL_GPKG` to the municipal GeoPackage and run `10_explore_gpkg.py` and `11_corridor_width.py`.
 
-**Segmentation masks and the full output archive.** The 2,349 mask files (18 MB), the per-image segmentation scores and the complete derived tables are deposited on figshare under CC BY 4.0. The DOI is reported in the Data Availability Statement of the manuscript.
+**Segmentation masks and the full output archive.** The 2,348 segmentation files (1,174 masks in `.npz` and 1,174 detection records in `.json`), the per-image segmentation scores and the complete derived tables are deposited on figshare under CC BY 4.0. The DOI is reported in the Data Availability Statement of the manuscript. The one mask that a figure script needs directly, the tree in the worked example of Figure 3, is small and included here as `00_inputs/tree_mask_Ax2_40_L.npz`.
 
 **Audit images.** `50_audit_sheets.py` and `51_audit_tool.py` regenerate the sheets and the HTML audit tool from the frames and masks; the tool is not committed because it embeds the photographs.
 
@@ -71,6 +72,8 @@ python 50_analysis.py ../02_pipeline_v2/ecw_v2.csv ../02_pipeline_v2/corridor_no
 ```
 
 The scripts in `04_analysis/` read their inputs from `02_pipeline_v2/` and `04_analysis/out_final/`, so the repository can be used in place. Figure output goes to `figures/` unless `PC_FIG_DIR` is set.
+
+`PC_SCS_IMAGES` and `PC_LEGACY_IMAGES` point at the folders that hold the frames. The manifest paths carry an `scs/` or `tg/` prefix; `02_pipeline_v2/imgpath.py` accepts either the parent of those subfolders or the folder holding the files directly.
 
 Hardware note: SAM 3 must run in fp32 on an NVIDIA T1000 (8 GB, Turing); fp16 was four times slower. Sharing one image embedding across the text prompts of an image reproduces the single-prompt scores exactly and cuts the run time from about 320 s to about 16 s per image.
 

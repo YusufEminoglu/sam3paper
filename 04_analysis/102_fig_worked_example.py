@@ -27,6 +27,7 @@ sys.path.insert(0, str(PIPE))
 os.chdir(PIPE)
 
 import geom
+from imgpath import image_path
 sys.path.insert(0, str(HERE))
 from sigfig_common import *
 
@@ -71,7 +72,7 @@ pitch = 0.0
 OBSRGB = {k.replace("_", " "): tuple(int(OBJ[k][i:i + 2], 16) for i in (1, 3, 5)) for k in OBJ}
 
 # Tree / Potted Plant mask from SAM 3 cache
-tree_mask_file = REV.parent / "scratch_test" / "tree_mask.npz"
+tree_mask_file = Path(os.environ.get("PC_TREE_MASK", REV / "00_inputs" / "tree_mask_Ax2_40_L.npz"))
 tree_data = np.load(tree_mask_file)
 tree_mask = tree_data["mask"]
 
@@ -158,7 +159,7 @@ r_span_bot = bottleneck_r_spans[kmin]
 w_nom = R_max_corr - R_min_corr
 
 # Perspective image preparation with all masks overlaid
-im = np.array(Image.open(r.path).convert("RGB")).astype(float)
+im = np.array(Image.open(image_path(r)).convert("RGB")).astype(float)
 out = im.copy()
 
 # Overlay SAM 3 masks
