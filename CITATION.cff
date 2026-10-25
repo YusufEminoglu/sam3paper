@@ -21,6 +21,10 @@ url: "https://github.com/YusufEminoglu/sam3paper"
 license: MIT
 version: "1.0.0"
 date-released: "2026-10-26"
+identifiers:
+  - type: doi
+    value: 10.6084/m9.figshare.34001433
+    description: "Data deposit on figshare (segmentation archive and derived tables)"
 keywords:
   - walkability
   - phantom capacity

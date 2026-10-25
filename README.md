@@ -101,7 +101,7 @@ The geometry was validated against GIS facades only. No field survey was carried
 
 Code is released under the MIT Licence (`LICENSE`). Derived data in this repository, including the segmentation archive, are released under CC BY 4.0 (`DATA_LICENSE.md`). If you use the code or the data, please cite the article and this repository; `CITATION.cff` gives the metadata.
 
-The repository and its data are also deposited on figshare, which gives the deposit its own DOI for citation: https://figshare.com/s/e5f098dd79d132d4a199.
+The repository and its data are also deposited on figshare, which gives the deposit its own DOI for citation: https://doi.org/10.6084/m9.figshare.34001433.
 
 ## Contact
 
