@@ -79,7 +79,7 @@ Hardware note: SAM 3 must run in fp32 on an NVIDIA T1000 (8 GB, Turing); fp16 wa
 
 ## Validation and audit
 
-The geometry was validated against GIS facades only. No field survey was carried out. The segmentation audit was desk-based, performed by one rater with an AI-assisted display, on 15 images and 143 instances; precision was 90.2% (Wilson 95% interval 84.2 to 94.1). These limits are stated in the manuscript.
+The geometry was validated against GIS facades only. No field survey was carried out. The segmentation audit was desk-based, performed by one rater with an AI-assisted display, on 15 frames and 144 instances (143 rated, one marked uncertain); precision was 90.2% (Wilson 95% interval 84.2 to 94.1). These limits are stated in the manuscript.
 
 ## Licence and citation
 
