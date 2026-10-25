@@ -2,15 +2,19 @@
 __pycache__/
 *.pyc
 
-# Never commit imagery, masks, municipal layers, or credentials.
+# Never commit imagery, municipal layers, or credentials.
 *.jpg
 *.jpeg
 *.png
-*.npz
 *.gpkg
-seg_v2/
 seg_sf/
-# the one derived mask that a figure script needs (1 KB, never part of the seg archive)
+*.npz
+# The SAM 3 output archive ships with the repository: masks and detection records for
+# all 1,174 frames (2,348 files, 18 MB), written by 20_sam3_segment.py. It holds the
+# segmentation of the Street View frames, not the frames themselves.
+!02_pipeline_v2/seg_v2/
+!02_pipeline_v2/seg_v2/*.npz
+# the one derived mask that a figure script needs directly
 !00_inputs/tree_mask_Ax2_40_L.npz
 audit_tool.html
 data/external/

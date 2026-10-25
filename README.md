@@ -2,7 +2,7 @@
 
 Code and derived data for the manuscript *Phantom Capacity in Urban Pedestrian Networks: An AI-Assisted Approach to Functional Walkability Using Street View Imagery and SAM 3* (Eminoğlu, Erdin, Şanlı), submitted to *Transactions in GIS*.
 
-The repository contains the full measurement pipeline, the validation and audit scripts, the analysis and figure scripts, and the derived tables that the manuscript reports. Raw Street View frames and the municipal GIS database are not included; the reasons are given below.
+The repository contains the full measurement pipeline, the validation and audit scripts, the analysis and figure scripts, the derived tables that the manuscript reports, and the SAM 3 segmentation output for every frame. Raw Street View frames and the municipal GIS database are not included; the reasons are given below.
 
 ## What the method does
 
@@ -28,6 +28,7 @@ The analysed sample has 557 nodes in 251 streets in Konak, İzmir.
   *.py                          # pipeline scripts (run from this folder)
   *.csv                         # derived outputs: corridor_nodes, manifest_run, view_coverage, seg scores, calib,
                                 #   ecw_v2, ecw_sf, geomval, anchor_cons, panorama provenance and capture dates
+  seg_v2/*.npz|*.json           # SAM 3 output for all 1,174 frames: packed instance masks and detection records
 03_validation/                  # model comparison, instance audit, audit tool
   out_final/*.csv               # agreement and audit summaries
   audit/*.csv                   # filled audit sheets (images are not redistributed)
@@ -39,13 +40,26 @@ legacy_v1/                      # the five scrubbed scripts of the first version
 
 The derived tables are sufficient to rerun `04_analysis/` and reproduce the reported statistics and figures without raw imagery. Regenerating the segmentation or the geometry requires the inputs listed below.
 
+## The segmentation archive
+
+`02_pipeline_v2/seg_v2/` holds the SAM 3 output for all 1,174 frames: 1,174 `.npz` files and 1,174 `.json` files, 18 MB in total. Each pair is one frame, named after its manifest key. The `.npz` stores the instance masks packed with `numpy.packbits` as an `N × H·W/8` byte array plus the image shape; the `.json` stores the prompt, score, bounding box and pixel area of every instance in the same order. Detections are kept at a score floor of 0.5 because the manuscript applies thresholds between 0.5 and 0.7 downstream.
+
+```python
+import json, numpy as np
+j = json.load(open("seg_v2/scs_1398_E.json"))
+z = np.load("seg_v2/scs_1398_E.npz")
+h, w = z["shape"]                                  # 640, 640
+mask = np.unpackbits(z["masks"][i])[: h * w].reshape(h, w).astype(bool)
+j["dets"][i]["prompt"], j["dets"][i]["score"]       # instance i
+```
+
+The archive is the segmentation of the frames, not the frames themselves. It carries no imagery and no personal data. `SEGMENTATION_SHA256SUMS.txt` lists a checksum for every file in it.
+
 ## What is not in this repository
 
 **Street View frames.** Google's terms do not permit redistribution, so no frame is stored here, and the audit sheets are provided as verdicts rather than images. `02_pipeline_v2/manifest_run.csv` lists all 1,174 frames of the study with the image key, node, side, camera heading and pitch, source label and a relative path (`scs/node1398_E.jpg`, `tg/Axis2_Dist40_Left.jpg`). The two sources are documented differently. For the 100 legacy pilot frames (50 nodes) the exact panorama is fixed by identifier and its capture date is recorded, in `tg_images_R1_provenance.csv` and `tg_pano_dates.csv`. For the 1,074 Konak frames (537 nodes) the frames were retrieved by coordinate rather than by panorama identifier, so the node coordinates in `corridor_nodes.csv` together with the recorded heading and pitch identify the view; anyone with a Street View API key can request the same view again, though not necessarily the same capture.
 
 **Municipal GIS database.** The road and building layers come from the Konak smart-city database and are not redistributed. Derived per-node corridor geometry is provided in `corridor_nodes.csv`. To rebuild it, set `PC_MUNICIPAL_GPKG` to the municipal GeoPackage and run `10_explore_gpkg.py` and `11_corridor_width.py`.
-
-**Segmentation masks and the full output archive.** The 2,348 segmentation files (1,174 masks in `.npz` and 1,174 detection records in `.json`), the per-image segmentation scores and the complete derived tables are deposited on figshare under CC BY 4.0. The DOI is reported in the Data Availability Statement of the manuscript. The one mask that a figure script needs directly, the tree in the worked example of Figure 3, is small and included here as `00_inputs/tree_mask_Ax2_40_L.npz`.
 
 **Audit images.** `50_audit_sheets.py` and `51_audit_tool.py` regenerate the sheets and the HTML audit tool from the frames and masks; the tool is not committed because it embeds the photographs.
 
@@ -73,6 +87,8 @@ python 50_analysis.py ../02_pipeline_v2/ecw_v2.csv ../02_pipeline_v2/corridor_no
 
 The scripts in `04_analysis/` read their inputs from `02_pipeline_v2/` and `04_analysis/out_final/`, so the repository can be used in place. Figure output goes to `figures/` unless `PC_FIG_DIR` is set.
 
+The segmentation archive is already in `02_pipeline_v2/seg_v2/`, so `42_calibrate_h.py`, `30_ecw_v2.py` and everything after them run without the Street View frames. Only the step that produces the archive, `20_sam3_segment.py`, needs the frames and a Hugging Face token for the gated `facebook/sam3` repository.
+
 `PC_SCS_IMAGES` and `PC_LEGACY_IMAGES` point at the folders that hold the frames. The manifest paths carry an `scs/` or `tg/` prefix; `02_pipeline_v2/imgpath.py` accepts either the parent of those subfolders or the folder holding the files directly.
 
 Hardware note: SAM 3 must run in fp32 on an NVIDIA T1000 (8 GB, Turing); fp16 was four times slower. Sharing one image embedding across the text prompts of an image reproduces the single-prompt scores exactly and cuts the run time from about 320 s to about 16 s per image.
@@ -83,7 +99,9 @@ The geometry was validated against GIS facades only. No field survey was carried
 
 ## Licence and citation
 
-Code is released under the MIT Licence (`LICENSE`). Derived data in this repository are released under CC BY 4.0 (`DATA_LICENSE.md`). If you use the code or the data, please cite the article and this repository; `CITATION.cff` gives the metadata.
+Code is released under the MIT Licence (`LICENSE`). Derived data in this repository, including the segmentation archive, are released under CC BY 4.0 (`DATA_LICENSE.md`). If you use the code or the data, please cite the article and this repository; `CITATION.cff` gives the metadata.
+
+The repository is archived on figshare under the same licence, which assigns it a DOI of its own for citation: https://figshare.com/s/e5f098dd79d132d4a199.
 
 ## Contact
 
