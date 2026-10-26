@@ -1,7 +1,8 @@
 """Scenario sensitivity of the headline indicators (share of nodes with best-side ECW < 0.9 m, mean phantom capacity).
 
-usage: python 60_sensitivity.py <seg_dir> <manifest_run.csv> <out_csv> [max_nodes]
-Scenarios: central; lane width -0.5 / +0.5 m; camera height 2.2 / 2.8 m; score threshold 0.5 / 0.7; footprint depth x0.7 / x1.3;
+usage: python 60_sensitivity.py <seg_dir> <manifest_run.csv> <out_csv> [max_nodes] [calib.csv]
+Every scenario starts from the headline model of 30_ecw_v2.py: per-node calibrated camera height (source median where a node
+is not calibrated), node PC weighted by W_nom. Scenarios: central; lane width -0.5 / +0.5 m; camera height x0.88 / x1.12 (2.2 and 2.8 m at 2.5 m); score threshold 0.5 / 0.7; footprint depth x0.7 / x1.3;
            vehicles removed (upper bound of clearance); persons added as obstacles (lower bound); shared-mode threshold 1.0 / 2.0 m.
 """
 import sys, json, importlib.util, numpy as np, pandas as pd
@@ -12,7 +13,12 @@ sys.path.insert(0, str(P2))
 spec = importlib.util.spec_from_file_location("ecw2", P2 / "30_ecw_v2.py"); ecw2 = importlib.util.module_from_spec(spec); spec.loader.exec_module(ecw2)
 
 seg_dir, manifest, out_csv = Path(sys.argv[1]), sys.argv[2], sys.argv[3]
-max_nodes = int(sys.argv[4]) if len(sys.argv) > 4 else 10 ** 9
+max_nodes = int(sys.argv[4]) if len(sys.argv) > 4 and int(sys.argv[4]) > 0 else 10 ** 9
+calib_csv = Path(sys.argv[5]) if len(sys.argv) > 5 else P2 / "calib.csv"
+cal = pd.read_csv(calib_csv)
+hmap = dict(zip(cal.node, cal.h_node))
+_cnt = cal.groupby("src").h_node.agg(["size", "median"])
+hmed = {k: float(v["median"]) for k, v in _cnt.iterrows() if v["size"] >= 15}   # same rule as 30_ecw_v2.main
 corr = pd.read_csv(P2 / "corridor_nodes.csv")
 corr["node"] = np.where(corr.src == "SCS", "scs_" + corr.id.astype(str).str.replace(r"\.0$", "", regex=True), corr.id)
 corr = corr.set_index("node")
@@ -21,7 +27,7 @@ man = pd.read_csv(manifest)
 SC = {
     "central": {},
     "lane_w -0.5 m": dict(dlane=-0.5), "lane_w +0.5 m": dict(dlane=+0.5),
-    "camera h 2.2 m": dict(prm=dict(h=2.2)), "camera h 2.8 m": dict(prm=dict(h=2.8)),
+    "camera h x0.88": dict(hscale=0.88), "camera h x1.12": dict(hscale=1.12),
     "score thr 0.5": dict(prm=dict(thr=0.5)), "score thr 0.7": dict(prm=dict(thr=0.7)),
     "depth prior x0.7": dict(prm=dict(depth_scale=0.7)), "depth prior x1.3": dict(prm=dict(depth_scale=1.3)),
     "vehicles removed": dict(drop={"car", "truck", "motorcycle"}),
@@ -51,22 +57,23 @@ for node_id, g in man.groupby("node", sort=False):
         if "dlane" in sc:
             nd["w_carriage"] = max(0.0, node.lanes * (node.lane_w + sc["dlane"]))
         ecw2.SHARED_MAX = sc.get("shared", 1.5)
-        prm = dict(ecw2.CENTRAL); prm.update(sc.get("prm", {}))
+        base_h = hmap.get(node_id, hmed.get(node.src, 2.5))
+        prm = dict(ecw2.CENTRAL, h=base_h * sc.get("hscale", 1.0)); prm.update(sc.get("prm", {}))
         use = imgs
         if "drop" in sc:
             use = [dict(i, dets=[d for d in i["dets"] if d["prompt"] not in sc["drop"]]) for i in imgs]
-        best = []; caps = []
+        best = []; caps = []; wts = []
         for side in "LR":
             e = ecw2.evaluate(nd, side, use, prm, with_persons=sc.get("persons", False))
             if e and e["coverage"] >= 0.5 and not np.isnan(e["ecw_min"]):
-                best.append(e["ecw_min"]); wn = min(e["zone_w"], 3.0); caps.append(1 - min(e["ecw_min"], wn) / wn)
+                best.append(e["ecw_min"]); wn = min(e["zone_w"], 3.0); caps.append(1 - min(e["ecw_min"], wn) / wn); wts.append(wn)
         if best:
-            rows.append(dict(node=node_id, scenario=name, ecw_best=max(best), pc=np.mean(caps)))
+            rows.append(dict(node=node_id, scenario=name, ecw_best=max(best), pc=float(np.average(caps, weights=wts))))
 ecw2.SHARED_MAX = 1.5
 df = pd.DataFrame(rows); df.to_csv(out_csv.replace(".csv", "_nodes.csv"), index=False)
 common = df.groupby("node").scenario.nunique()
 df = df[df.node.isin(common[common == len(SC)].index)]
 summ = df.groupby("scenario").agg(n=("node", "size"), share_lt09=("ecw_best", lambda x: (x < 0.9).mean() * 100),
                                     share_ge15=("ecw_best", lambda x: (x >= 1.5).mean() * 100), median_ecw=("ecw_best", "median"),
-                                    mean_pc=("pc", lambda x: x.mean() * 100)).reindex(list(SC)).round(2)
+                                    mean_pc=("pc", lambda x: x.mean() * 100)).reindex(list(SC)).round(4)
 summ.to_csv(out_csv); print(summ.to_string())

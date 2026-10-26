@@ -21,6 +21,7 @@ import numpy as np
 import pandas as pd
 from pathlib import Path
 from sigfig_common import *
+from scipy.stats import pearsonr
 
 def conf_ellipse(x, y, ax, n_std=1.8, **kwargs):
     """Draw a 2D confidence / tolerance ellipse covering n_std deviations."""
@@ -49,6 +50,7 @@ def build_fig11():
     base_acc = s.loc["central", "share_ge15"]
     base_ecw = s.loc["central", "median_ecw"]
     base_pc  = s.loc["central", "mean_pc"]
+    N_COMMON = int(s.loc["central", "n"])
     
     # Canvas dimensions tuned for exact 3:2 (~1.500:1) landscape publication aspect ratio
     FIG_W = 13.17
@@ -89,9 +91,9 @@ def build_fig11():
         "depth prior x0.7": "Footprint depth priors compressed (×0.7)",
         "lane_w +0.5 m": "Carriageway lane width expanded (+0.5 m)",
         "score thr 0.7": "Detector confidence threshold raised (0.7)",
-        "camera h 2.2 m": "Effective camera height lowered (2.2 m)",
+        "camera h x0.88": "Calibrated camera height lowered (×0.88)",
         "lane_w -0.5 m": "Carriageway lane width narrowed (-0.5 m)",
-        "camera h 2.8 m": "Effective camera height raised (2.8 m)",
+        "camera h x1.12": "Calibrated camera height raised (×1.12)",
         "score thr 0.5": "Detector confidence threshold lowered (0.5)",
         "persons added": "Pedestrians included as fixed obstacles",
         "depth prior x1.3": "Footprint depth priors dilated (×1.3)",
@@ -104,9 +106,9 @@ def build_fig11():
         "depth prior x0.7": "Optical",
         "lane_w +0.5 m": "Geometry",
         "score thr 0.7": "Detection",
-        "camera h 2.2 m": "Optical",
+        "camera h x0.88": "Optical",
         "lane_w -0.5 m": "Geometry",
-        "camera h 2.8 m": "Optical",
+        "camera h x1.12": "Optical",
         "score thr 0.5": "Detection",
         "persons added": "Detection",
         "depth prior x1.3": "Optical",
@@ -158,7 +160,7 @@ def build_fig11():
                      
     ax1.set_yticks(y_positions)
     ax1.set_yticklabels([labels_clean[k] for k in s_diff.index], fontsize=7.6, fontweight="bold", color="#334155")
-    ax1.set_xlabel("Change in impassable share (pp relative to central = 22.2%)",
+    ax1.set_xlabel(f"Change in impassable share (pp relative to central = {base_imp:.1f}%)",
                    fontsize=8.0, fontweight="bold", color="#475569")
     ax1.set_xlim(-12.8, 4.8)
     ax1.set_ylim(-0.7, len(s_diff) + 0.1)
@@ -194,9 +196,9 @@ def build_fig11():
     # Panel (a) Header
     fig.text(0.030, HEADER_Y_TOP, "(a)", fontsize=11.5, fontweight="bold", color="#0f172a",
              bbox=bbox_badge, va="center", ha="left", transform=fig.transFigure, zorder=10)
-    fig.text(0.060, HEADER_Y_TOP, "Parametric perturbation tornado: differential shift in impassable share (n = 536)",
+    fig.text(0.060, HEADER_Y_TOP, f"Parametric perturbation tornado: differential shift in impassable share (n = {N_COMMON})",
              fontsize=9.8, fontweight="bold", color="#0f172a", va="center", ha="left", transform=fig.transFigure, zorder=10)
-    fig.text(0.060, SUB_Y_TOP, "Deviation in impassable node share (<0.9 m) across 12 modelling variants relative to central baseline (22.2%)",
+    fig.text(0.060, SUB_Y_TOP, f"Deviation in impassable node share (<0.9 m) across {len(s) - 1} modelling variants relative to central baseline ({base_imp:.1f}%)",
              fontsize=7.4, fontweight="normal", color="#64748b", va="center", ha="left", transform=fig.transFigure, zorder=10)
 
     # -------------------------------------------------------------------------
@@ -228,7 +230,7 @@ def build_fig11():
     ecdf_min = np.min(ecdf_matrix, axis=0)
     ecdf_max = np.max(ecdf_matrix, axis=0)
     ax2.fill_between(x_eval, ecdf_min, ecdf_max, color="#cbd5e1", alpha=0.40, zorder=2,
-                     label="10 Parametric Variants Envelope")
+                     label=f"{len(parametric_scenarios)} Parametric Variants Envelope")
     
     sh1_ecw = sn_common[sn_common.scenario == "shared threshold 1.0 m"]["ecw_best"].values
     y_sh1 = np.array([(sh1_ecw <= x).mean() * 100 for x in x_eval])
@@ -236,7 +238,7 @@ def build_fig11():
     
     cen_ecw = sn_common[sn_common.scenario == "central"]["ecw_best"].values
     y_cen = np.array([(cen_ecw <= x).mean() * 100 for x in x_eval])
-    ax2.plot(x_eval, y_cen, color="#0f172a", lw=2.4, zorder=5, label="Central Baseline (n = 536)")
+    ax2.plot(x_eval, y_cen, color="#0f172a", lw=2.4, zorder=5, label=f"Central Baseline (n = {N_COMMON})")
     
     veh_ecw = sn_common[sn_common.scenario == "vehicles removed"]["ecw_best"].values
     y_veh = np.array([(veh_ecw <= x).mean() * 100 for x in x_eval])
@@ -283,7 +285,7 @@ def build_fig11():
     conf_ellipse(px, py, ax3, n_std=1.8, facecolor="#f1f5f9", edgecolor="#94a3b8",
                  linestyle="--", linewidth=1.2, alpha=0.65, zorder=2)
                  
-    ax3.text(35.8, 26.3, "Parametric Invariance Cluster (10 variants)\nPC: 30.5–34.1%  •  Imp: 19.6–25.4%",
+    ax3.text(35.8, 26.3, f"Parametric Invariance Cluster ({len(parametric_scenarios)} variants)\nPC: {px.min():.1f}–{px.max():.1f}%  •  Imp: {py.min():.1f}–{py.max():.1f}%",
              fontsize=6.8, fontweight="bold", color="#475569", ha="right", va="bottom", zorder=6)
     ax3.annotate("", xy=(32.8, 24.8), xytext=(32.8, 26.1),
                  arrowprops=dict(arrowstyle="->", color="#94a3b8", lw=1.0), zorder=6)
@@ -295,12 +297,12 @@ def build_fig11():
         if sc == "central":
             ax3.scatter(row["mean_pc"], row["share_lt09"], s=115, color="#0f172a",
                         marker="D", edgecolor="white", lw=1.4, zorder=7)
-            ax3.text(row["mean_pc"] - 0.45, row["share_lt09"] - 0.4, "Central Baseline (32.3%, 22.2%)",
+            ax3.text(row["mean_pc"] - 0.45, row["share_lt09"] - 0.4, f"Central Baseline ({row['mean_pc']:.1f}%, {row['share_lt09']:.1f}%)",
                      fontsize=7.2, fontweight="bold", color="#0f172a", ha="right", va="top", zorder=8)
         elif sc == "vehicles removed":
             ax3.scatter(row["mean_pc"], row["share_lt09"], s=125, color="#0d9488",
                         marker="s", edgecolor="white", lw=1.4, zorder=7)
-            ax3.annotate("Vehicles Removed (Counterfactual)\nPC: 17.8% (-45%)  •  Imp: 10.6% (-52%)",
+            ax3.annotate(f"Vehicles Removed (Counterfactual)\nPC: {row['mean_pc']:.1f}% ({100 * (row['mean_pc'] / base_pc - 1):+.0f}%)  •  Imp: {row['share_lt09']:.1f}% ({100 * (row['share_lt09'] / base_imp - 1):+.0f}%)",
                          xy=(row["mean_pc"], row["share_lt09"]), xytext=(17.2, 14.2),
                          fontsize=7.0, fontweight="bold", color="#0d9488", va="bottom",
                          arrowprops=dict(arrowstyle="->", color="#0d9488", lw=1.1), zorder=8)
@@ -312,7 +314,8 @@ def build_fig11():
     x_line = np.linspace(16, 36, 100)
     ax3.plot(x_line, m_slope * x_line + b_intercept, color="#94a3b8", lw=1.3, ls="-.", zorder=3)
     
-    ax3.text(35.5, 9.6, "Linear phase-space coupling:  r = +0.953  (R² = 0.908, p < 0.001)\nPhantom capacity linearly scales impassable node share",
+    _r, _p = pearsonr(s["mean_pc"], s["share_lt09"])
+    ax3.text(35.5, 9.6, f"Linear phase-space coupling:  r = {_r:+.3f}  (R² = {_r ** 2:.3f}, {'p < 0.001' if _p < 0.001 else f'p = {_p:.3f}'})\nPhantom capacity scales with the impassable node share",
              fontsize=6.8, fontstyle="italic", color="#64748b", ha="right", va="center", zorder=4)
 
     leg_handles_c = [
