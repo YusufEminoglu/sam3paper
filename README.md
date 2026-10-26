@@ -103,7 +103,7 @@ Code is released under the MIT Licence (`LICENSE`). Derived data in this reposit
 
 The repository and its data are also deposited on figshare, which gives the deposit its own DOI for citation: https://doi.org/10.6084/m9.figshare.34001433.
 
-The same content is mirrored at https://gitlab.com/yusufeminoglu/phantom-capacity; the two repositories carry the same commits.
+The same content is mirrored at https://gitlab.com/yusufeminoglu/phantom-capacity.
 
 ## Contact
 
